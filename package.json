@@ -1,0 +1,12 @@
+{
+  "name": "league-coach",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "node src/index.js",
+    "build": "echo \"nothing to build yet\"",
+    "lint": "echo \"no lint yet\"",
+    "test": "echo \"no tests yet\""
+  }
+}
