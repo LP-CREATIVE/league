@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Message {
+  id        String   @id @default(cuid())
+  role      String
+  content   String   @db.Text
+  tokens    Int
+  costUsd   Float
+  createdAt DateTime @default(now())
+}
+model Frame {
+  id        String   @id @default(cuid())
+  clock     Int
+  json      Json
+  createdAt DateTime @default(now())
+}

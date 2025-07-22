@@ -1,0 +1,22 @@
+{
+  "name": "@league/harvester",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "@league/llm-clients": "workspace:^",
+    "@league/shared": "workspace:^",
+    "node-fetch": "^3.3.2",
+    "pino": "^9.1.0",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
+}
