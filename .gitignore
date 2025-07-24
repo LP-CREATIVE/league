@@ -1,4 +1,32 @@
-node_modules
+﻿# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment variables
 .env
-.turbo
-dist
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp_*.wav
+*.wav
+
+# Backups
+*.backup
+
+# Lock files (optional - you might want to keep these)
+# pnpm-lock.yaml
+# package-lock.json

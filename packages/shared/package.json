@@ -17,6 +17,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "node-fetch": "3"
+    "node-fetch": "3",
+    "openai": "^4.104.0"
   }
 }
