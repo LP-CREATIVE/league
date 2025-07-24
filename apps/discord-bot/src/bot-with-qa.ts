@@ -22,7 +22,6 @@ const client = new Client({
   ],
 });
 
-// Store connections for each server
 const serverConnections = new Map<string, {
   connection: VoiceConnection;
   player: ReturnType<typeof createAudioPlayer>;
@@ -30,7 +29,6 @@ const serverConnections = new Map<string, {
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-// Get configured servers
 function getConfiguredServers(): Array<{ guildId: string; voiceChannelId: string }> {
   const servers = [];
   let i = 1;
@@ -46,6 +44,13 @@ function getConfiguredServers(): Array<{ guildId: string; voiceChannelId: string
   return servers;
 }
 
+const conversationHistory: Array<{role: "user" | "assistant" | "system", content: string}> = [
+  { 
+    role: "system", 
+    content: "You're a 25 year old guy. You know sports (NFL, NCAA) and games (League, CoD, Siege). If someone talks shit, you'll roast them back but keep it funny. One sentence only, talk normal, don't try too hard. For League of Legends, you're a skilled player who gives solid macro advice."
+  }
+];
+
 client.once("ready", async () => {
   log.info("Bot is ready, connecting to configured servers...");
   
@@ -60,8 +65,6 @@ client.once("ready", async () => {
   }
   
   log.info(`Connected to ${serverConnections.size} servers`);
-  log.info("Voice RECEIVING is currently disabled on macOS due to native module issues");
-  log.info("You can still use the /speak endpoint to make the bot talk");
 });
 
 async function connectToServer(guildId: string, voiceChannelId: string) {
@@ -94,9 +97,30 @@ async function connectToServer(guildId: string, voiceChannelId: string) {
   player.on(AudioPlayerStatus.Playing, () => log.info("Playing"));
   player.on(AudioPlayerStatus.Idle, () => log.info("Finished"));
   
-  // Voice receiver disabled for now - setupVoiceReceiver(guildId, connection);
-  
   log.info({ guildId, channelId: voiceChannelId }, "Connected to voice channel");
+}
+
+async function getAnswer(question: string): Promise<string> {
+  conversationHistory.push({ role: "user", content: question });
+  
+  while (conversationHistory.length > 10) {
+    conversationHistory.splice(1, 1);
+  }
+
+  const res = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: conversationHistory,
+    max_tokens: 100,
+    temperature: 0.9,
+  });
+  
+  const answer = res.choices[0]?.message?.content?.trim() || "";
+  
+  if (answer) {
+    conversationHistory.push({ role: "assistant", content: answer });
+  }
+  
+  return answer;
 }
 
 async function speak(guildId: string, text: string) {
@@ -137,7 +161,6 @@ app.post("/speak", async (req, res) => {
       return res.status(400).json({ error: "Missing text" });
     }
     
-    // If no guildId specified, speak in all connected servers
     if (!guildId) {
       for (const [id, _] of serverConnections) {
         await speak(id, text);
@@ -147,6 +170,34 @@ app.post("/speak", async (req, res) => {
     }
     
     res.json({ ok: true });
+  } catch (e: any) {
+    log.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/ask", async (req, res) => {
+  try {
+    const { question, guildId } = req.body;
+    
+    if (!question) {
+      return res.status(400).json({ error: "Missing question" });
+    }
+    
+    log.info({ question }, "Processing question");
+    
+    const answer = await getAnswer(question);
+    log.info({ answer }, "Generated answer");
+    
+    if (!guildId) {
+      for (const [id, _] of serverConnections) {
+        await speak(id, answer);
+      }
+    } else {
+      await speak(guildId, answer);
+    }
+    
+    res.json({ ok: true, answer });
   } catch (e: any) {
     log.error(e);
     res.status(500).json({ error: e.message });
