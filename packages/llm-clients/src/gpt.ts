@@ -1,3 +1,4 @@
+ 
 import OpenAI from "openai";
 
 export async function askGPT(prompt: string, model = "gpt-4o-mini") {
@@ -8,7 +9,7 @@ export async function askGPT(prompt: string, model = "gpt-4o-mini") {
   const res = await openai.chat.completions.create({
     model,
     messages: [{ role: "user", content: prompt }],
-    max_tokens: 120,
+    max_tokens: 1000,  // Increased from 120 to 1000 for detailed analysis
     temperature: 0.3
   });
 

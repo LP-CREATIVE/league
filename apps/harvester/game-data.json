@@ -1,0 +1,269 @@
+{
+  "activePlayer": {
+    "abilities": {
+      "E": {
+        "abilityLevel": 4,
+        "displayName": "Electro Harpoon",
+        "id": "RumbleGrenade",
+        "rawDescription": "GeneratedTip_Spell_RumbleGrenade_Description",
+        "rawDisplayName": "GeneratedTip_Spell_RumbleGrenade_DisplayName"
+      },
+      "Passive": {
+        "displayName": "Junkyard Titan",
+        "id": "RumbleHeatSystem",
+        "rawDescription": "GeneratedTip_Passive_RumbleHeatSystem_Description",
+        "rawDisplayName": "GeneratedTip_Passive_RumbleHeatSystem_DisplayName"
+      },
+      "Q": {
+        "abilityLevel": 5,
+        "displayName": "Flamespitter",
+        "id": "RumbleFlameThrower",
+        "rawDescription": "GeneratedTip_Spell_RumbleFlameThrower_Description",
+        "rawDisplayName": "GeneratedTip_Spell_RumbleFlameThrower_DisplayName"
+      },
+      "R": {
+        "abilityLevel": 2,
+        "displayName": "The Equalizer",
+        "id": "RumbleCarpetBomb",
+        "rawDescription": "GeneratedTip_Spell_RumbleCarpetBomb_Description",
+        "rawDisplayName": "GeneratedTip_Spell_RumbleCarpetBomb_DisplayName"
+      },
+      "W": {
+        "abilityLevel": 0,
+        "displayName": "Scrap Shield",
+        "id": "RumbleShield",
+        "rawDescription": "GeneratedTip_Spell_RumbleShield_Description",
+        "rawDisplayName": "GeneratedTip_Spell_RumbleShield_DisplayName"
+      }
+    },
+    "championStats": {
+      "abilityHaste": 0,
+      "abilityPower": 216.94705200195312,
+      "armor": 77.24250030517578,
+      "armorPenetrationFlat": 0,
+      "armorPenetrationPercent": 1,
+      "attackDamage": 92.08000183105469,
+      "attackRange": 125,
+      "attackSpeed": 0.7485453486442566,
+      "bonusArmorPenetrationPercent": 1,
+      "bonusMagicPenetrationPercent": 1,
+      "critChance": 0,
+      "critDamage": 175,
+      "currentHealth": 1686.375,
+      "healShieldPower": 0,
+      "healthRegenRate": 2.453000068664551,
+      "lifeSteal": 0,
+      "magicLethality": 0,
+      "magicPenetrationFlat": 0,
+      "magicPenetrationPercent": 1,
+      "magicResist": 41.60124969482422,
+      "maxHealth": 1686.375,
+      "moveSpeed": 550.839111328125,
+      "omnivamp": 0,
+      "physicalLethality": 0,
+      "physicalVamp": 0,
+      "resourceMax": 150,
+      "resourceRegenRate": 0,
+      "resourceType": "HEAT",
+      "resourceValue": 0,
+      "spellVamp": 0,
+      "tenacity": 5
+    },
+    "currentGold": 841.0816650390625,
+    "fullRunes": {
+      "generalRunes": [
+        {
+          "displayName": "Arcane Comet",
+          "id": 8229,
+          "rawDescription": "perk_tooltip_ArcaneComet",
+          "rawDisplayName": "perk_displayname_ArcaneComet"
+        },
+        {
+          "displayName": "Nimbus Cloak",
+          "id": 8275,
+          "rawDescription": "perk_tooltip_NimbusCloak",
+          "rawDisplayName": "perk_displayname_NimbusCloak"
+        },
+        {
+          "displayName": "Absolute Focus",
+          "id": 8233,
+          "rawDescription": "perk_tooltip_8233",
+          "rawDisplayName": "perk_displayname_8233"
+        },
+        {
+          "displayName": "Scorch",
+          "id": 8237,
+          "rawDescription": "perk_tooltip_Scorch",
+          "rawDisplayName": "perk_displayname_Scorch"
+        },
+        {
+          "displayName": "Taste of Blood",
+          "id": 8139,
+          "rawDescription": "perk_tooltip_TasteOfBlood",
+          "rawDisplayName": "perk_displayname_TasteOfBlood"
+        },
+        {
+          "displayName": "Ultimate Hunter",
+          "id": 8106,
+          "rawDescription": "perk_tooltip_UltimateHunter",
+          "rawDisplayName": "perk_displayname_UltimateHunter"
+        }
+      ],
+      "keystone": {
+        "displayName": "Arcane Comet",
+        "id": 8229,
+        "rawDescription": "perk_tooltip_ArcaneComet",
+        "rawDisplayName": "perk_displayname_ArcaneComet"
+      },
+      "primaryRuneTree": {
+        "displayName": "Sorcery",
+        "id": 8200,
+        "rawDescription": "perkstyle_tooltip_7202",
+        "rawDisplayName": "perkstyle_displayname_7202"
+      },
+      "secondaryRuneTree": {
+        "displayName": "Domination",
+        "id": 8100,
+        "rawDescription": "perkstyle_tooltip_7200",
+        "rawDisplayName": "perkstyle_displayname_7200"
+      },
+      "statRunes": [
+        {
+          "id": 5008,
+          "rawDescription": "perk_tooltip_StatModAdaptive"
+        },
+        {
+          "id": 5008,
+          "rawDescription": "perk_tooltip_StatModAdaptive"
+        },
+        {
+          "id": 5001,
+          "rawDescription": "perk_tooltip_StatModHealthScaling"
+        }
+      ]
+    },
+    "level": 11,
+    "riotId": "ROWDY#NA2",
+    "riotIdGameName": "ROWDY",
+    "riotIdTagLine": "NA2",
+    "summonerName": "ROWDY#NA2",
+    "teamRelativeColors": true
+  },
+  "allPlayers": [
+    {
+      "championName": "Rumble",
+      "isBot": false,
+      "isDead": false,
+      "items": [
+        {
+          "canUse": false,
+          "consumable": false,
+          "count": 1,
+          "displayName": "Rabadon's Deathcap",
+          "itemID": 3089,
+          "price": 1100,
+          "rawDescription": "GeneratedTip_Item_3089_Description",
+          "rawDisplayName": "Item_3089_Name",
+          "slot": 0
+        },
+        {
+          "canUse": true,
+          "consumable": false,
+          "count": 1,
+          "displayName": "Stealth Ward",
+          "itemID": 3340,
+          "price": 0,
+          "rawDescription": "GeneratedTip_Item_3340_Description",
+          "rawDisplayName": "Item_3340_Name",
+          "slot": 6
+        }
+      ],
+      "level": 11,
+      "position": "",
+      "rawChampionName": "game_character_displayname_Rumble",
+      "rawSkinName": "game_character_skin_displayname_Rumble_0",
+      "respawnTimer": 0,
+      "riotId": "ROWDY#NA2",
+      "riotIdGameName": "ROWDY",
+      "riotIdTagLine": "NA2",
+      "runes": {
+        "keystone": {
+          "displayName": "Arcane Comet",
+          "id": 8229,
+          "rawDescription": "perk_tooltip_ArcaneComet",
+          "rawDisplayName": "perk_displayname_ArcaneComet"
+        },
+        "primaryRuneTree": {
+          "displayName": "Sorcery",
+          "id": 8200,
+          "rawDescription": "perkstyle_tooltip_7202",
+          "rawDisplayName": "perkstyle_displayname_7202"
+        },
+        "secondaryRuneTree": {
+          "displayName": "Domination",
+          "id": 8100,
+          "rawDescription": "perkstyle_tooltip_7200",
+          "rawDisplayName": "perkstyle_displayname_7200"
+        }
+      },
+      "scores": {
+        "assists": 0,
+        "creepScore": 60,
+        "deaths": 0,
+        "kills": 0,
+        "wardScore": 0
+      },
+      "skinID": 0,
+      "skinName": "",
+      "summonerName": "ROWDY#NA2",
+      "summonerSpells": {
+        "summonerSpellOne": {
+          "displayName": "Unleashed Teleport",
+          "rawDescription": "GeneratedTip_SummonerSpell_S12_SummonerTeleportUpgrade_Description",
+          "rawDisplayName": "GeneratedTip_SummonerSpell_S12_SummonerTeleportUpgrade_DisplayName"
+        },
+        "summonerSpellTwo": {
+          "displayName": "Flash",
+          "rawDescription": "GeneratedTip_SummonerSpell_SummonerFlash_Description",
+          "rawDisplayName": "GeneratedTip_SummonerSpell_SummonerFlash_DisplayName"
+        }
+      },
+      "team": "ORDER"
+    }
+  ],
+  "events": {
+    "Events": [
+      {
+        "EventID": 0,
+        "EventName": "GameStart",
+        "EventTime": 0.02856140024960041
+      },
+      {
+        "EventID": 1,
+        "EventName": "MinionsSpawning",
+        "EventTime": 65.03919982910156
+      },
+      {
+        "Assisters": [],
+        "EventID": 2,
+        "EventName": "TurretKilled",
+        "EventTime": 1126.067138671875,
+        "KillerName": "ROWDY",
+        "TurretKilled": "Turret_TChaos_L2_P3_2521511112"
+      },
+      {
+        "EventID": 3,
+        "EventName": "FirstBrick",
+        "EventTime": 1126.067138671875,
+        "KillerName": "Minion_T100L2S35N0219"
+      }
+    ]
+  },
+  "gameData": {
+    "gameMode": "PRACTICETOOL",
+    "gameTime": 1225.82763671875,
+    "mapName": "Map11",
+    "mapNumber": 11,
+    "mapTerrain": "Default"
+  }
+}
