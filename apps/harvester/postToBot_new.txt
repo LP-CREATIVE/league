@@ -1,10 +1,10 @@
 async function postToBot(text: string) {
   log.info({ textLength: text.length, preview: text.substring(0, 50) }, "postToBot called");
-
+  
   // TTS-optimized chunking
   const maxLength = 450; // Discord TTS works best under 500 chars
   const messages = [];
-
+  
   // Split by paragraphs first
   const paragraphs = text.split(/\n\n+/);
   
@@ -36,24 +36,27 @@ async function postToBot(text: string) {
       }
     }
   }
-
+  
   log.info({ messageCount: messages.length }, "Sending messages to Discord");
-
-  // Send each message with delay for TTS
+  
+  // Send each message and wait for completion
   for (let i = 0; i < messages.length; i++) {
     try {
       const response = await fetch(process.env.DISCORD_BOT_WEBHOOK || "http://localhost:4000/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: messages[i] })
+        body: JSON.stringify({ 
+          text: messages[i],
+          waitForCompletion: true  // This tells the bot to wait until speaking is done
+        })
       });
-
+      
       log.info({
         messageIndex: i,
         messageLength: messages[i].length,
         status: response.status
       }, "Discord bot response");
-
+      
       if (!response.ok) {
         const errorText = await response.text();
         log.error({ status: response.status, error: errorText }, "Discord bot error");
@@ -61,10 +64,8 @@ async function postToBot(text: string) {
     } catch (e) {
       log.error(e, "Failed to send to Discord bot");
     }
-
-    // Longer delay between messages for TTS to finish
-    if (i < messages.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 3500));
-    }
+    
+    // No need for delay anymore - the bot will only respond after speaking is complete!
+    // The waitForCompletion flag ensures sequential playback
   }
 }

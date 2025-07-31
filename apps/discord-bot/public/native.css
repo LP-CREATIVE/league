@@ -1,0 +1,166 @@
+/* Native app styles */
+.titlebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-app-region: drag;
+    z-index: 1000;
+}
+
+.titlebar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.titlebar-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.titlebar-controls {
+    display: flex;
+    -webkit-app-region: no-drag;
+}
+
+.titlebar-button {
+    width: 46px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.titlebar-button:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.titlebar-button.close:hover {
+    background: #e81123;
+    color: white;
+}
+
+/* Adjust main container for titlebar */
+body.electron .container {
+    padding-top: calc(32px + 2rem);
+}
+
+/* Hide titlebar in browser */
+body:not(.electron) .titlebar {
+    display: none;
+}
+
+/* Native scrollbars */
+body.electron ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+body.electron ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+body.electron ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 6px;
+    border: 2px solid var(--bg-secondary);
+}
+
+body.electron ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Native context menus */
+body.electron {
+    user-select: none;
+}
+
+body.electron .selectable {
+    user-select: text;
+}
+
+/* Smooth animations */
+body.electron * {
+    animation-duration: 0.2s !important;
+}
+
+/* Glass effect for cards in Electron */
+body.electron .service-card {
+    backdrop-filter: blur(10px);
+    background: rgba(26, 35, 50, 0.8);
+}
+
+body.electron .feed-section {
+    backdrop-filter: blur(10px);
+    background: rgba(26, 35, 50, 0.8);
+}
+
+/* Native notifications style */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    min-width: 300px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.notification-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.notification-message {
+    font-size: 0.813rem;
+    color: var(--text-secondary);
+}
+
+.notification.success .notification-icon {
+    color: var(--accent-green);
+}
+
+.notification.error .notification-icon {
+    color: var(--accent-red);
+}
+
+.notification.info .notification-icon {
+    color: var(--accent-blue);
+}

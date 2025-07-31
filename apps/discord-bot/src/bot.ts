@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+﻿import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 import { Client, GatewayIntentBits, ChannelType, VoiceChannel } from "discord.js";
 import {
@@ -13,6 +13,8 @@ import express from "express";
 import pino from "pino";
 import { Readable } from "stream";
 import OpenAI from "openai";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const log = pino({ level: "info" });
 const client = new Client({
@@ -122,35 +124,122 @@ async function speak(guildId: string, text: string) {
   }
 }
 
+// Add this new function to wait for speech completion
+async function speakAndWait(guildId: string, text: string): Promise<void> {
+  const server = serverConnections.get(guildId);
+  if (!server) {
+    log.error(`Server ${guildId} not found`);
+    return;
+  }
+  
+  try {
+    const res = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: "onyx",
+      input: text,
+      speed: 1.0,
+    });
+    
+    const buffer = Buffer.from(await res.arrayBuffer());
+    const resource = createAudioResource(Readable.from(buffer), { inputType: StreamType.Arbitrary });
+    
+    // Return a promise that resolves when speaking is done
+    return new Promise((resolve) => {
+      // Listen for when the player becomes idle (done speaking)
+      const idleHandler = () => {
+        server.player.off(AudioPlayerStatus.Idle, idleHandler);
+        resolve();
+      };
+      
+      server.player.on(AudioPlayerStatus.Idle, idleHandler);
+      server.player.play(resource);
+      
+      // Timeout after 5 minutes in case something goes wrong
+      setTimeout(() => {
+        server.player.off(AudioPlayerStatus.Idle, idleHandler);
+        resolve();
+      }, 300000);
+    });
+  } catch (error) {
+    log.error(error, "TTS error");
+  }
+}
+
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 const app = express();
 app.use(express.json());
 
-app.get("/ping", (_req, res) => res.send("ok"));
+// Get current directory for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Stats tracking
+const stats = {
+  servers: 0,
+  voiceConnections: 0,
+  messagesProcessed: 0,
+  startTime: Date.now()
+};
+
+app.get("/ping", (_req, res) => {
+  stats.servers = client.guilds.cache.size;
+  stats.voiceConnections = serverConnections.size;
+  
+  res.json({ 
+    status: "ok",
+    stats
+  });
+});
+
+// Harvester status endpoint (placeholder for now)
+app.get("/harvester-status", (_req, res) => {
+  // This would be updated by the harvester service in production
+  res.json({
+    connected: true,
+    leagueClientConnected: false,
+    gamePhase: "-",
+    analysisCount: stats.messagesProcessed
+  });
+});
 
 app.post("/speak", async (req, res) => {
   try {
-    const { text, guildId } = req.body;
+    const { text, guildId, waitForCompletion } = req.body;
     
     if (!text) {
       return res.status(400).json({ error: "Missing text" });
     }
     
     // If no guildId specified, speak in all connected servers
-    if (!guildId) {
-      for (const [id, _] of serverConnections) {
+    const targetGuilds = guildId ? [guildId] : Array.from(serverConnections.keys());
+    
+    if (waitForCompletion) {
+      // Wait for speech to complete before responding
+      for (const id of targetGuilds) {
+        await speakAndWait(id, text);
+      }
+      res.json({ ok: true, completed: true });
+    } else {
+      // Original behavior - respond immediately
+      for (const id of targetGuilds) {
         await speak(id, text);
       }
-    } else {
-      await speak(guildId, text);
+      res.json({ ok: true });
     }
     
-    res.json({ ok: true });
+    // Track messages processed
+    stats.messagesProcessed++;
   } catch (e: any) {
     log.error(e);
     res.status(500).json({ error: e.message });
   }
 });
 
-app.listen(4000, "0.0.0.0", () => log.info("Webhook listening on 4000"));
+app.listen(4000, "0.0.0.0", () => {
+  log.info("Webhook listening on 4000");
+  log.info("Web UI available at http://localhost:4000");
+});

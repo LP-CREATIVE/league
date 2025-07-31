@@ -3,6 +3,7 @@ import pino from "pino";
 import { askGPT } from "@league/llm-clients/gpt.js";
 import fetch from "node-fetch";
 import https from "https";
+import { monitorChampionSelect } from "./pregame.js";
 
 const log = pino({ level: "info" });
 const agent = new https.Agent({ rejectUnauthorized: false });
@@ -10,10 +11,10 @@ const agent = new https.Agent({ rejectUnauthorized: false });
 // Configuration
 const CONFIG = {
   API_URL: "https://127.0.0.1:2999/liveclientdata/playerlist",
+  GAME_DATA_URL: "https://127.0.0.1:2999/liveclientdata/allgamedata",
   DISCORD_WEBHOOK: process.env.DISCORD_BOT_WEBHOOK || "http://localhost:4000/speak",
   CHECK_INTERVAL: 5000, // Check every 5 seconds
-  MESSAGE_DELAY: 4000, // 4 seconds between messages for TTS
-  MAX_MESSAGE_LENGTH: 300, // Optimal chunk size for Discord TTS
+  MAX_MESSAGE_LENGTH: 1000, // Increased chunk size for Discord TTS
   GPT_MODEL: "gpt-4o", // Use gpt-4o-mini for cheaper option
   DEBUG: true // Enable detailed console logging
 };
@@ -28,24 +29,36 @@ function debug(message: string, data?: any) {
   }
 }
 
-// Fetch player list from League client
-async function fetchPlayerList(): Promise<any[] | null> {
+// Fetch game data from League client
+async function fetchGameData(): Promise<{ players: any[], activePlayer: any } | null> {
   try {
-    const res = await fetch(CONFIG.API_URL, { agent });
-    if (!res.ok) {
-      if (res.status === 404) {
+    // Fetch both player list and full game data
+    const [playersRes, gameDataRes] = await Promise.all([
+      fetch(CONFIG.API_URL, { agent }),
+      fetch(CONFIG.GAME_DATA_URL, { agent })
+    ]);
+    
+    if (!playersRes.ok || !gameDataRes.ok) {
+      if (playersRes.status === 404 || gameDataRes.status === 404) {
         return null; // Game not running
       }
-      throw new Error(`Live Client fetch failed: ${res.status}`);
+      throw new Error(`Live Client fetch failed`);
     }
-    const data = await res.json();
-    debug("Fetched player data", { playerCount: data.length });
-    return data;
+    
+    const players = await playersRes.json() as any[];
+    const gameData = await gameDataRes.json() as any;
+    
+    debug("Fetched game data", { 
+      playerCount: players.length,
+      activePlayerName: gameData.activePlayer?.summonerName 
+    });
+    
+    return { players, activePlayer: gameData.activePlayer };
   } catch (error: any) {
     if (error.code === 'ECONNREFUSED') {
       return null; // League client not running
     }
-    log.error(error, "Failed to fetch player list");
+    log.error(error, "Failed to fetch game data");
     return null;
   }
 }
@@ -67,20 +80,36 @@ function findJungler(players: any[], team?: string): any | null {
 }
 
 // Generate strategic analysis
-async function generateJungleAnalysis(playerData: any[]): Promise<string | null> {
+async function generateJungleAnalysis(gameData: { players: any[], activePlayer: any }): Promise<string | null> {
   debug("Starting jungle analysis generation");
   
-  // Find YOUR player - the one who isn't a bot
-  const you = playerData.find(p => p.isBot === false);
+  const { players: playerData, activePlayer } = gameData;
+  
+  // Find YOUR player using the activePlayer data (this is ALWAYS you)
+  const you = playerData.find(p => 
+    p.summonerName === activePlayer.summonerName
+  );
+  
   if (!you) {
     log.error("Could not find your player in the game");
+    debug("Failed to match activePlayer", {
+      activePlayerName: activePlayer?.summonerName,
+      playerNames: playerData.map(p => p.summonerName)
+    });
     return null;
   }
-  debug(`Found your player: ${you.summonerName} on team ${you.team}`);
+  
+  debug(`Found your player: ${you.summonerName} playing ${you.championName} on team ${you.team}`);
 
-  // Find jungler on YOUR team
+  // Now correctly identify teams based on YOUR team
   const yourTeam = playerData.filter(p => p.team === you.team);
   const enemyTeam = playerData.filter(p => p.team !== you.team);
+  
+  debug("Team breakdown", {
+    yourTeamSize: yourTeam.length,
+    enemyTeamSize: enemyTeam.length,
+    yourTeamSide: you.team
+  });
   
   const yourJungler = findJungler(yourTeam);
   if (!yourJungler) {
@@ -276,16 +305,17 @@ function formatForDiscord(analysis: string): string[] {
 }
 
 // Send message to Discord bot with detailed logging
-async function sendToDiscord(message: string): Promise<void> {
+async function sendToDiscord(message: string, waitForCompletion: boolean = true): Promise<void> {
   debug(`Sending to Discord: "${message.substring(0, 50)}..."`, {
-    fullLength: message.length
+    fullLength: message.length,
+    waitForCompletion
   });
   
   try {
     const response = await fetch(CONFIG.DISCORD_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: message })
+      body: JSON.stringify({ text: message, waitForCompletion })
     });
     
     if (!response.ok) {
@@ -304,15 +334,32 @@ async function sendToDiscord(message: string): Promise<void> {
 // Main application loop
 async function main(): Promise<void> {
   console.log("=================================");
-  console.log("League Jungle Coach v2.0");
+  console.log("League Jungle Coach v3.0");
   console.log("=================================");
   console.log(`Debug mode: ${CONFIG.DEBUG ? 'ENABLED' : 'DISABLED'}`);
   console.log(`GPT Model: ${CONFIG.GPT_MODEL}`);
   console.log(`Message chunk size: ${CONFIG.MAX_MESSAGE_LENGTH} chars`);
-  console.log(`Message delay: ${CONFIG.MESSAGE_DELAY}ms`);
+  console.log("Messages wait for completion: YES");
+  console.log("Features: Pregame Analysis + In-Game Coaching");
   console.log("=================================\n");
   
-  log.info("League Jungle Coach started - waiting for game...");
+  log.info("League Jungle Coach started - monitoring champion select and games...");
+  
+  // Start monitoring champion select
+  console.log("🔍 Monitoring champion select...");
+  monitorChampionSelect(async (analysis) => {
+    console.log("\n🏆 CHAMPION SELECT ANALYSIS 🏆");
+    await sendToDiscord("Champion select analysis incoming...");
+    
+    const messages = formatForDiscord(analysis);
+    for (let i = 0; i < messages.length; i++) {
+      console.log(`\n[PREGAME ${i + 1}/${messages.length}] Sending message...`);
+      await sendToDiscord(messages[i], true);
+      console.log(`✓ Pregame message ${i + 1} completed`);
+    }
+    
+    console.log("\n✅ PREGAME ANALYSIS SENT! ✅\n");
+  });
   
   let currentGameId: string | null = null;
   let isAnalyzing = false;
@@ -320,9 +367,9 @@ async function main(): Promise<void> {
   setInterval(async () => {
     if (isAnalyzing) return;
     
-    const playerData = await fetchPlayerList();
+    const gameData = await fetchGameData();
     
-    if (!playerData || playerData.length === 0) {
+    if (!gameData || gameData.players.length === 0) {
       if (currentGameId) {
         debug("Game ended");
         log.info("Game ended");
@@ -331,7 +378,7 @@ async function main(): Promise<void> {
       return;
     }
     
-    const gameId = playerData
+    const gameId = gameData.players
       .map(p => p.summonerName)
       .sort()
       .join(',');
@@ -347,7 +394,7 @@ async function main(): Promise<void> {
     try {
       await sendToDiscord("Game detected. Analyzing jungle matchup...");
       
-      const analysis = await generateJungleAnalysis(playerData);
+      const analysis = await generateJungleAnalysis(gameData);
       
       if (analysis) {
         const messages = formatForDiscord(analysis);
@@ -359,12 +406,9 @@ async function main(): Promise<void> {
           console.log(`Length: ${messages[i].length} chars`);
           console.log(`Preview: "${messages[i].substring(0, 100)}..."`);
           
-          await sendToDiscord(messages[i]);
-          
-          if (i < messages.length - 1) {
-            console.log(`⏳ Waiting ${CONFIG.MESSAGE_DELAY}ms before next message...`);
-            await new Promise(resolve => setTimeout(resolve, CONFIG.MESSAGE_DELAY));
-          }
+          // Wait for each message to complete before sending the next
+          await sendToDiscord(messages[i], true);
+          console.log(`✓ Message ${i + 1} completed`);
         }
         
         console.log("\n✅ ALL MESSAGES SENT SUCCESSFULLY! ✅\n");

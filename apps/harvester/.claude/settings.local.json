@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:oss.novastar.tech)",
+      "WebFetch(domain:developer-en.vnnox.com)",
+      "Bash(test_bot.bat)",
+      "Bash(cmd /c:*)",
+      "Bash(npx tsx:*)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(npm run build:*)",
+      "Bash(powershell:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

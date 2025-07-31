@@ -1,0 +1,50 @@
+Warwick Jungle: Strategic Game Plan
+
+MATCHUP ANALYSIS
+
+PHASE 1: PRE-GAME ANALYSIS
+1. Team Composition Assessment:
+Your Win Condition: You have a pick composition with strong skirmishing power. Your team wins through Warwick's early-mid game dominance, using your ultimate to create picks on isolated targets and snowballing through objective control. Focus on getting your solo laners ahead through successful ganks and translating kills into towers and dragons.
+Enemy Win Condition: They have a scaling teamfight composition. They win by reaching late game with their ADC fully itemized, grouping as 5, and winning front-to-back teamfights. You must prevent this by ending the game before 30 minutes through aggressive early plays.
+
+2. Jungle Matchup: Warwick vs Lee Sin
+Threat Level: HIGH
+Lee Sin is one of the strongest early game junglers with high mobility and burst damage. He will look to invade you level 3 and can outduel you before you get items. His ganking is more versatile than yours early.
+Your Advantages: You have better sustain in the jungle, stronger objective control with your W attack speed, and scale better into mid game. Your ultimate is more reliable for picks, and you're much stronger in extended fights once you have Tiamat.
+
+PHASE 2: EARLY GAME EXECUTION (0-10 MIN)
+1. Jungle Pathing:
+Starting Route: Red > Krugs > Raptors > Look for gank mid/bot > Wolves > Blue > Gromp
+Why This Path: This path keeps you healthy with Red buff sustain and positions you bot side where Lee Sin often starts blue. You can track him and avoid early invades while looking for a gank on an immobile bot lane.
+
+2. Gank Priority:
+FIRST: Mid Lane - Your Syndra has strong setup with her E stun, and getting her ahead enables roaming and objective control
+SECOND: Top Lane - Darius can snowball hard with a lead, and your ultimate guarantees his pull combo
+THIRD: Bot Lane - Only gank if they're severely overextended, as Ezreal is too safe and Yuumi makes it a 2v3
+
+3. Key Timings:
+- 3:15: Give up first scuttle if Lee Sin is there - you lose the 1v1
+- 5:00: Look to start dragon if you have bot priority or Lee Sin shows top
+- 8:00: Herald is crucial - your mid game is stronger, use it to crack mid tower
+
+PHASE 3: MID GAME STRATEGY (10-20 MIN)
+1. Power Spikes:
+Your Spike: Level 6 with Tiamat - you can now duel Lee Sin and your clear speed doubles
+Team Spike: Level 11 when you have rank 2 ultimate and your team has their core items
+
+2. Objective Priority:
+Dragons are your win condition. Your W gives you the fastest dragon take in the game. Always prep vision 60 seconds early and look to start it when Lee Sin shows on the opposite side of the map.
+
+3. Vision Control:
+Place pinks in pixel brushes near dragon. Sweep and control enemy blue side jungle when ahead. Your W blood trails give you pseudo-vision of low health enemies - use this to track Lee Sin after skirmishes.
+
+WIN CONDITIONS
+How You Win:
+1. Use your ultimate to repeatedly pick off their mid laner or ADC in side lanes, then force 5v4 objectives
+2. Maintain dragon control and use your item advantage at 20 minutes to force fights before they scale
+3. Group with your team for a Herald push at 14 minutes to crack mid and establish deep vision
+
+How You Lose:
+1. Lee Sin gets his lanes ahead early while you're still weak, creating an insurmountable gold deficit
+2. Game goes past 30 minutes and their Jinx reaches 4 items, making teamfights unwinnable
+3. You fail to track Lee Sin's invades and fall behind in levels, becoming irrelevant in mid game
